@@ -1,82 +1,106 @@
-# Automatización de Pruebas QA (Selenium + Pytest)
+# Pre-Entrega: Automatización de Pruebas QA
 
-Proyecto de automatización de pruebas web con Python, Selenium y Pytest sobre el sitio [SauceDemo](https://www.saucedemo.com/).
+Este proyecto es la pre-entrega del curso de QA Automation. Consiste en automatizar casos de prueba sobre la web [SauceDemo](https://www.saucedemo.com/) usando Selenium WebDriver con Python y Pytest.
+
+El objetivo es validar flujos críticos de usuario (autenticación, catálogo de productos y carrito de compras) aplicando buenas prácticas de testing automatizado, estrategias de localización de elementos, esperas explícitas y modularización de código.
 
 ---
 
-## Pasos para empezar a trabajar
+## Tecnologías usadas
 
-### 1. Clonar el repositorio (si estás en otra máquina)
+- Python
+- Selenium WebDriver
+- Pytest
+- pytest-html (para sacar el reporte en html)
+- webdriver-manager (para manejar el chromedriver)
+- Git / GitHub
+
+---
+
+## Pruebas que están automatizadas
+
+Todo está dentro de `tests/test_saucedemo.py`:
+
+- **Login:**
+  - Login con el usuario `standard_user` y contraseña `secret_sauce`.
+  - Validación de que redireccione bien a `/inventory.html`, el título de la página y el texto "Products".
+- **Catálogo / Inventario:**
+  - Que esté visible el menú hamburguesa y el selector de ordenamiento/filtros.
+  - Que haya productos cargados en la página.
+  - Comprobación de que el primer producto tenga nombre y precio.
+- **Carrito de compras:**
+  - Agregar el primer producto y chequear que el botón pase a decir "Remove".
+  - Comprobar que el número en el icono del carrito cambie a 1.
+  - Entrar al carrito (`/cart.html`) y validar que el producto agregado sea el correcto.
+
+---
+
+## Cómo levantarlo y correrlo
+
+### 1. Clonar el repo
+
 ```bash
-git clone https://github.com/pablolospe/preLabQA.git
-cd preLabQA
+git clone https://github.com/pablolospe/pre-entrega-automation-testing-pablo-lospennato.git
+cd pre-entrega-automation-testing-pablo-lospennato
 ```
 
 ### 2. Crear y activar el entorno virtual
-En la raíz del proyecto ejecuta:
 
-- **macOS / Linux:**
-  ```bash
-  python3 -m venv .venv
-  source .venv/bin/activate
-  ```
-- **Windows:**
-  ```bash
-  python -m venv .venv
-  .venv\Scripts\activate
-  ```
+En Mac / Linux:
 
-### 3. Instalar dependencias
-Con el entorno virtual activado:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+En Windows:
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+### 3. Instalar las dependencias
+
 ```bash
 pip install -r requirements.txt
 ```
 
-> **Nota para VS Code / Editor:**  
-> Asegúrate de seleccionar el intérprete de Python correcto:
-> 1. Presiona `Cmd + Shift + P` (o `Ctrl + Shift + P`).
-> 2. Busca y selecciona **`Python: Select Interpreter`**.
-> 3. Elige la opción que contiene `('.venv': venv)`.
-
 ---
 
-## 🧪 Ejecutar los Tests
+## Ejecución de los tests
 
-### Ejecutar todos los tests
+Con el entorno virtual activado:
+
+Para correr todos los tests y generar el reporte:
+
 ```bash
 pytest
 ```
 
-### Ejecutar con reporte detallado en consola
+*(Ya configuré en el `pytest.ini` los flags para que guarde el reporte en la carpeta `reports/`).*
+
+O también se puede correr a mano con los flags que pedía la consigna:
+
 ```bash
-pytest -v -s
+pytest tests/test_saucedemo.py -v --html=reports/reporte.html --self-contained-html
 ```
 
-### Ejecutar un archivo específico
-```bash
-pytest tests/test_saucedemo.py
-```
-
-### Ejecutar un test puntual dentro de un archivo
-```bash
-pytest tests/test_saucedemo.py -k test_01_login
-```
+El reporte se genera en `reports/reporte.html` y se puede abrir directo con Chrome o cualquier navegador para ver los resultados.
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del proyecto
 
 ```text
-├── .venv/               # Entorno virtual (ignorado por git)
-├── reports/             # Reportes HTML generados
-├── tests/               # Casos de prueba automatizados
-│   ├── test_saucedemo.py
-│   ├── test_login_exito.py
-│   └── test_login_glitsh.py
-├── utils/               # Funciones auxiliares / helpers
-│   └── helpers.py
-├── conftest.py          # Fixtures y configuración global de Pytest
-├── pytest.ini           # Configuración de ejecución de Pytest
-├── requirements.txt     # Dependencias del proyecto
-└── README.md            # Documentación del proyecto
+pre-entrega-automation-testing-pablo-lospennato/
+├── tests/
+│   └── test_saucedemo.py     # los tests automatizados
+├── utils/
+│   └── helpers.py            # funciones auxiliares (login, agregar al carrito)
+├── conftest.py               # fixtures de pytest (driver y usuario logueado)
+├── pytest.ini                # config de pytest para armar el reporte html
+├── requirements.txt          # paquetes necesarios
+├── .gitignore                # para ignorar .venv, reportes y cache
+└── README.md                 # explicacion del proyecto
 ```
